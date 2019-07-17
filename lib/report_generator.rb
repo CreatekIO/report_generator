@@ -1,4 +1,4 @@
-require "report_generator/version"
+require 'report_generator/version'
 
 module ReportGenerator
   class Error < StandardError; end
