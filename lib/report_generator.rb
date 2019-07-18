@@ -29,3 +29,5 @@ module ReportGenerator
     end
   end
 end
+
+require 'report_generator/rails' if defined?(Rails)
