@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activerecord', '~> 4'
   spec.add_dependency 'activesupport', '~> 4'
   spec.add_dependency 'dragonfly', '~> 1'
+  spec.add_dependency 'rails-html-sanitizer', '~> 1'
   spec.add_dependency 'railties', '~> 4'
   spec.add_dependency 'sidekiq', '>= 3'
 
