@@ -41,6 +41,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler', '~> 1'
   spec.add_development_dependency 'byebug'
+  spec.add_development_dependency 'dragonfly-s3_data_store', '~> 1.3'
   spec.add_development_dependency 'mysql2', '~> 0.3.20'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'

@@ -3,8 +3,11 @@ require 'byebug'
 require 'mysql2'
 require 'rails/all'
 require 'report_generator'
+require_relative '../app/models/report_generator/download'
 
 ENV['RAILS_ENV'] ||= 'test'
+
+Dir[File.expand_path('./support/**/*.rb', __dir__)].each { |f| require f }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -28,7 +31,7 @@ db_config = {
   password: ENV['DB_PASSWORD']
 }.freeze
 
-ActiveRecord::Base.logger = Logger.new(File.expand_path('../log/test.log', __dir__))
+ActiveRecord::Base.logger = ActiveSupport::Logger.new(File.expand_path('../log/test.log', __dir__))
 ActiveRecord::Base.establish_connection(db_config)
 
 require 'active_record/tasks/database_tasks'
