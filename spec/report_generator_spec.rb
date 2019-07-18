@@ -33,4 +33,27 @@ RSpec.describe ReportGenerator do
       expect(described_class.download_class).to eq(TestModel)
     end
   end
+
+  describe '.process' do
+    let(:report_type) { 'testing_report_generator_process' }
+
+    let(:generator_class) do
+      Class.new(described_class::Abstract)
+    end
+
+    let!(:download) { described_class::Download.create!(report_type: report_type) }
+    let(:spy_for_generate_method) { spy }
+
+    before do
+      spy_var = spy_for_generate_method # capture spy in local scope
+      generator_class.registers(report_type)
+      generator_class.send(:define_method, :generate) { spy_var.called }
+    end
+
+    it 'calls #generate on an instance of the generator' do
+      described_class.process(download.id)
+
+      expect(spy_for_generate_method).to have_received(:called)
+    end
+  end
 end
