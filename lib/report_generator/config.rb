@@ -4,7 +4,7 @@ module ReportGenerator
   class Config
     include Singleton
 
-    attr_accessor :admin_class
+    attr_accessor :admin_class, :modal_content
     attr_writer :download_class, :parent_controller, :html_sanitizer
 
     def download_class

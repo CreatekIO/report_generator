@@ -1,0 +1,11 @@
+#generate-report-modal.modal.fade{ tabindex: '-1', role: 'dialog', 'aria-labelledby' => 'report-modal-title', 'aria-hidden' => true }
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{ 'aria-hidden' => true, 'data-dismiss' => 'modal', type: 'button' } ×
+        %h4#report-modal-title.modal-title Your report is generating
+
+      = render 'report_generator/modal_body'
+
+      .modal-footer
+        %button#generate-report-button.btn.btn-default.center-block Generate Report

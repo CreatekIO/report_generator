@@ -1,0 +1,9 @@
+.modal-body
+  %h4.b Your CSV report is being generated
+  = simple_format ReportGenerator.config.modal_content.to_s
+
+  %p Would you like us to email you a copy of this information?
+
+  %label
+    %input#report-email{ type: 'checkbox' }
+    Yes please, send me a copy by email
