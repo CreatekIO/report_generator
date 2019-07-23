@@ -1,6 +1,6 @@
 module ReportGenerator
   module Helper
-    def report_modal(report_type, data = {})
+    def report_button(report_type, data = {})
       position = data.delete(:position)
 
       button_tag(
