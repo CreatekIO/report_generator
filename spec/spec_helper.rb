@@ -48,6 +48,8 @@ ActiveRecord::Tasks::DatabaseTasks.tap do |tasks|
   tasks.migrate rescue nil
 end
 
+class ApplicationController < ActionController::Base; end
+
 Dragonfly.app.configure do
   datastore :file, root_path: 'tmp/dragonfly'
 end

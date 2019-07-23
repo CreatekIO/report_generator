@@ -1,3 +1,5 @@
+require 'sidekiq'
+
 module ReportGenerator
   class Worker
     include Sidekiq::Worker

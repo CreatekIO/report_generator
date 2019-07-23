@@ -25,10 +25,6 @@ RSpec.describe ReportGenerator do
       allow(described_class).to receive(:config).and_return(config)
     end
 
-    after do
-      described_class.instance_variable_set(:@download_class, nil)
-    end
-
     it 'returns constant from string value' do
       expect(described_class.download_class).to eq(TestModel)
     end

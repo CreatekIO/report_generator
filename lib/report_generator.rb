@@ -18,7 +18,11 @@ module ReportGenerator
     end
 
     def download_class
-      @download_class ||= config.download_class.constantize
+      config.download_class.constantize
+    end
+
+    def parent_controller
+      config.parent_controller.constantize
     end
 
     def process(report_download_id)
