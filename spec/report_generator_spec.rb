@@ -18,15 +18,26 @@ RSpec.describe ReportGenerator do
   end
 
   describe '.download_class' do
-    TestModel = Class.new
-
-    before do
-      config = double('Config', download_class: TestModel.name)
-      allow(described_class).to receive(:config).and_return(config)
-    end
-
     it 'returns constant from string value' do
-      expect(described_class.download_class).to eq(TestModel)
+      stub_const('TestModel', Class.new)
+
+      with_config do |config|
+        config.download_class = TestModel.name
+
+        expect(described_class.download_class).to eq(TestModel)
+      end
+    end
+  end
+
+  describe '.worker_class' do
+    it 'returns constant from string value' do
+      stub_const('TestWorker', Class.new)
+
+      with_config do |config|
+        config.worker_class = TestWorker.name
+
+        expect(described_class.worker_class).to eq(TestWorker)
+      end
     end
   end
 

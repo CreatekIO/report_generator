@@ -1,7 +1,7 @@
 module ReportGenerator
   class DownloadsController < ReportGenerator.parent_controller
     def create
-      Worker.perform_async(
+      ReportGenerator.worker_class.perform_async(
         ReportGenerator.download_class.create_from!(report_download_params).id
       )
 

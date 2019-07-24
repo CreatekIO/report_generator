@@ -21,6 +21,10 @@ module ReportGenerator
       config.download_class.constantize
     end
 
+    def worker_class
+      config.worker_class.constantize
+    end
+
     def parent_controller
       config.parent_controller.constantize
     end

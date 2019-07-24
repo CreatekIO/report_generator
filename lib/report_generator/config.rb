@@ -5,10 +5,14 @@ module ReportGenerator
     include Singleton
 
     attr_accessor :admin_class, :modal_content
-    attr_writer :download_class, :parent_controller, :html_sanitizer
+    attr_writer :download_class, :worker_class, :parent_controller, :html_sanitizer
 
     def download_class
       @download_class ||= 'ReportGenerator::Download'
+    end
+
+    def worker_class
+      @worker_class ||= 'ReportGenerator::Worker'
     end
 
     def parent_controller
