@@ -1,0 +1,64 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: createkio/docker-ruby:2.3.3-slim
+        environment:
+          DB_HOST: 127.0.0.1
+          DB_USERNAME: root
+          DB_PASSWORD: ''
+      - image: mysql:5.7
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "report_generator.gemspec" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: Bundle install
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "report_generator.gemspec" }}
+
+      - run:
+          name: Wait for database
+          command: |
+            until curl -s -o /dev/null "$DB_HOST:3306"; do
+              sleep 5
+              echo "Waiting for MySQL"
+            done
+
+      - run:
+          name: Run Specs
+          command: |
+            mkdir /tmp/test-results
+            mkdir -p ~/repo/log
+
+            circleci tests glob "spec/**/*_spec.rb" | \
+              circleci tests split --split-by=timings | \
+            tee /dev/stderr | xargs bin/rspec \
+              --format RspecJunitFormatter \
+              --out /tmp/test-results/rspec.xml \
+              --format documentation
+
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+      - store_artifacts:
+          path: ~/repo/logs
+          destination: logs

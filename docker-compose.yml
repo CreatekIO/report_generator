@@ -1,0 +1,27 @@
+version: '3'
+services:
+  app:
+    image: createkio/docker-ruby:2.3.3-slim
+    working_dir: /app
+    command: >
+      bash -c '
+        bundle install &&
+        sleep infinity
+      '
+    environment:
+      - DB_HOST=db
+      - DB_USERNAME=root
+      - DB_PASSWORD=
+    depends_on:
+      - db
+    volumes:
+      - .:/app:cached
+
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    expose:
+      - 3306
+    ports:
+      - '33306:3306'
