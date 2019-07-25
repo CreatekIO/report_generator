@@ -60,5 +60,5 @@ jobs:
           path: /tmp/test-results
           destination: test-results
       - store_artifacts:
-          path: ~/repo/logs
+          path: ~/repo/log
           destination: logs
