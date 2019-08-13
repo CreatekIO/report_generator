@@ -20,6 +20,12 @@ Or install it yourself as:
 
 ## Usage
 
+Run `rake db:migrate` to add `ReportDownload` and `AdminReportDownload` tables.
+
+Mount the ReportGenerator Engine in the config/routes.rb file...
+
+`mount ReportGenerator::Engine => '/admin/report_downloads'`
+
 Declare a new generator somewhere (`lib` is a good place):
 
 ```ruby
