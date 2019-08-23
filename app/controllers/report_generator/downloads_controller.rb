@@ -11,11 +11,15 @@ module ReportGenerator
     private
 
     def report_download_params
-      params
+      given_params = params
         .require(:report_download)
         .permit!
         .map { |k, v| [k.underscore.to_sym, v] }
         .to_h
+
+      return process_report_download_params(given_params) if respond_to?(:process_report_download_params)
+
+      given_params
     end
   end
 end
