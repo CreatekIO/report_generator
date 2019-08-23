@@ -25,7 +25,6 @@ module ReportGenerator
     def report_link(report_type, data = {})
       link_to(
         '',
-        remote: true,
         id: data.delete(:id),
         data: {
           report_type: report_type,
