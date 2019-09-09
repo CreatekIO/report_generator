@@ -2,6 +2,8 @@ require 'bundler/setup'
 require 'byebug'
 require 'mysql2'
 require 'rails/all'
+require 'rspec/rails'
+require 'active_support/testing/time_helpers'
 require 'report_generator'
 require_relative '../app/models/report_generator/download'
 
@@ -19,7 +21,11 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.include ActiveSupport::Testing::TimeHelpers
 end
+
+Rails.application = ReportGenerator::Engine
 
 db_config = {
   database: "report_generator_test#{ENV['CIRCLE_NODE_INDEX']}",

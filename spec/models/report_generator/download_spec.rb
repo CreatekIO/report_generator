@@ -53,6 +53,85 @@ RSpec.describe ReportGenerator::Download do
     end
   end
 
+  describe '.to_jwt' do
+    it 'creates a valid JWT' do
+      secret = 'test secret'
+      algorithm = 'HS256'
+      report_download = described_class.create!(report_type: 'testing_to_jwt')
+
+      with_config do |config|
+        config.jwt_hmac_secret = secret
+        config.jwt_algorithm = algorithm
+
+        jwt = report_download.to_jwt
+
+        aggregate_failures do
+          expect(JWT.decode(jwt, secret, true, algorithm: algorithm)).to match(
+            [
+              {
+                'exp' =>  a_value_within(5.seconds).of(7.days.from_now.to_i),
+                'report_download_id' => report_download.id
+              },
+              { 'alg' => algorithm, 'typ' => 'JWT' }
+            ]
+          )
+          expect(described_class.from_jwt(jwt)).to eq(report_download)
+        end
+      end
+    end
+  end
+
+  describe '.from_jwt' do
+    # This value generated on:
+    # https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Njg2MzE4NDUsInJlcG9ydF9kb3dubG9hZF9pZCI6OTk5fQ.k3WdQ8JSb42vocyn4FYrAZTZ4Y1s1gJMlI7c2AOEvhQ
+    # using the settings below
+    let(:jwt) do
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Njg2MzE4NDUsInJlcG9ydF9kb3dubG9hZF9pZCI6OTk5fQ.k3WdQ8JSb42vocyn4FYrAZTZ4Y1s1gJMlI7c2AOEvhQ'
+    end
+
+    let(:secret) { 'test secret' }
+    let(:exp) { 1568631845 }
+    let(:id) { 999 }
+
+    let!(:report_download) { described_class.new(id: id) }
+
+    before do
+      allow(described_class).to receive(:find).with(id).and_return(report_download)
+    end
+
+    context 'when token has not expired' do
+      around do |example|
+        expiry_time = Time.at(exp)
+
+        travel_to(expiry_time - 1.second) { example.run }
+      end
+
+      it 'finds the correct download' do
+        with_config do |config|
+          config.jwt_hmac_secret = secret
+
+          expect(described_class.from_jwt(jwt)).to eq(report_download)
+        end
+      end
+    end
+
+    context 'when token has expired' do
+      around do |example|
+        expiry_time = Time.at(exp)
+
+        travel_to(expiry_time) { example.run }
+      end
+
+      it 'raises error' do
+        with_config do |config|
+          config.jwt_hmac_secret = secret
+
+          expect { described_class.from_jwt(jwt) }.to raise_error(JWT::ExpiredSignature)
+        end
+      end
+    end
+  end
+
   describe '.create_from!' do
     subject(:report_download) do
       described_class.create_from!(params)

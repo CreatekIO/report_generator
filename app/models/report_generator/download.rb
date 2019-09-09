@@ -1,4 +1,5 @@
 require 'dragonfly'
+require 'jwt'
 
 module ReportGenerator
   class Download < ActiveRecord::Base
@@ -23,15 +24,36 @@ module ReportGenerator
     def set_expiring_link!
       return if remote_file_url.present?
 
+      self.remote_file_url = expiring_link(expires_in: MAX_EXPIRY)
+      save!
+    end
+
+    def expiring_link(expires_in: MAX_EXPIRY)
       # This mirrors the logic used by Fog to calculate the `X-Amz-Expires`
       # header, so that we always get a valid value.
       # See: https://github.com/fog/fog-aws/blob/v2.0.0/lib/fog/aws/storage.rb#L178-L185
-      now = defined?(Fog) ? Fog::Time.now : Time.now
-      expires_at = now + EXPIRY_OFFSET
-      expires_at -= 60.seconds while (expires_at.to_i - now.to_i) > MAX_EXPIRY
+      if expires_in == MAX_EXPIRY
+        now = defined?(Fog) ? Fog::Time.now : Time.now
+        expires_at = now + EXPIRY_OFFSET
+        expires_at -= 60.seconds while (expires_at.to_i - now.to_i) > MAX_EXPIRY
+      else
+        expires_at = expires_in.from_now
+      end
 
-      self.remote_file_url = file.remote_url(expires: expires_at)
-      save!
+      file.remote_url(expires: expires_at)
+    end
+
+    def to_jwt
+      payload = {
+        exp: (Time.now + MAX_EXPIRY).to_i,
+        report_download_id: id
+      }
+
+      JWT.encode(
+        payload,
+        ReportGenerator.config.jwt_hmac_secret,
+        ReportGenerator.config.jwt_algorithm
+      )
     end
 
     class << self
@@ -67,6 +89,19 @@ module ReportGenerator
 
       def user_asked_for_email?(params)
         params[:send_email] == 'true'
+      end
+
+      def from_jwt(token)
+        payload, _headers = JWT.decode(
+          token,
+          ReportGenerator.config.jwt_hmac_secret,
+          true, # should verify?
+          algorithm: ReportGenerator.config.jwt_algorithm
+        )
+
+        id = payload['report_download_id'] or raise JWT::DecodeError, 'empty report_download_id'
+
+        find(id)
       end
     end
   end
