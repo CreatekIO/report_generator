@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    image: createkio/docker-ruby:2.3.3-slim
+    image: ruby:2.5.8-slim
     working_dir: /app
     command: >
       bash -c '
