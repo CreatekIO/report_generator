@@ -1,4 +1,4 @@
-class ReportGeneratorCreateTables < ActiveRecord::Migration
+class ReportGeneratorCreateTables < ActiveRecord::Migration[4.2]
   def change
     create_table_if_not_exists :report_downloads do |t|
       t.string :report_type
