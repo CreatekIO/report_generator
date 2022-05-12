@@ -20,7 +20,7 @@ RSpec.describe ReportGenerator::DownloadsController do
       )
     end
 
-    subject { get :show, token: jwt }
+    subject { get :show, params: { token: jwt } }
 
     before do
       with_config do |config|
@@ -104,7 +104,7 @@ RSpec.describe ReportGenerator::DownloadsController do
     end
 
     subject do
-      post :create, report_download_params
+      post :create, params: report_download_params
     end
 
     it 'successfully starts the report worker' do
