@@ -1,0 +1,31 @@
+steps:
+  - label: ':rspec:'
+    key: spec
+    plugins:
+      - docker-compose#v3.9.0:
+          run: app
+          env:
+            # used for names of JUnit XML files
+            - BUILDKITE_JOB_ID
+    timeout_in_minutes: 5
+    commands:
+      - .buildkite/test.sh
+    env:
+      BYEBUG: '0'
+      DEBUGGER: '0'
+    artifact_paths:
+      - log/*.log
+      - tmp/rspec-junit-*.xml
+      - tmp/rspec/*.txt
+      - tmp/capybara/*
+      - tmp/screenshots/*
+
+  - wait: ~
+    continue_on_failure: true
+
+  - label: ':junit:'
+    plugins:
+      - junit-annotate#v1.9.0:
+          artifacts: tmp/rspec-junit-*.xml
+          job-uuid-file-pattern: rspec-junit-([^.]+)\.xml
+          failure-format: file
