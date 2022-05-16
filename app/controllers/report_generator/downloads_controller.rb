@@ -27,7 +27,8 @@ module ReportGenerator
       given_params = params
         .require(:report_download)
         .permit!
-        .to_unsafe_h.map { |k, v| [k.underscore.to_sym, v] }
+        .to_unsafe_h
+        .map { |k, v| [k.underscore.to_sym, v] }
         .to_h
 
       return process_report_download_params(given_params) if respond_to?(:process_report_download_params)
