@@ -1,4 +1,4 @@
-class ReportGeneratorCreateTables < ActiveRecord::Migration
+class ReportGeneratorCreateTables < ActiveRecord::Migration[4.2]
   def change
     create_table_if_not_exists :report_downloads do |t|
       t.string :report_type
@@ -25,7 +25,7 @@ class ReportGeneratorCreateTables < ActiveRecord::Migration
   def create_table_if_not_exists(table_name, &block)
     reversible do |dir|
       dir.up do
-        if table_exists?(table_name)
+        if data_source_exists?(table_name)
           say "Table `#{table_name}` already created, skipping migration"
           return
         end
