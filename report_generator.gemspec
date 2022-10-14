@@ -33,11 +33,11 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'activerecord', '>= 4.2', '<= 5.2'
-  spec.add_dependency 'activesupport', '>= 4.2', '<= 5.2'
+  spec.add_dependency 'activerecord', '>= 4.2', '< 6'
+  spec.add_dependency 'activesupport', '>= 4.2', '< 6'
   spec.add_dependency 'dragonfly', '~> 1'
   spec.add_dependency 'rails-html-sanitizer', '~> 1'
-  spec.add_dependency 'railties', '>= 4.2', '<= 5.2'
+  spec.add_dependency 'railties', '>= 4.2', '< 6'
   spec.add_dependency 'sidekiq', '>= 3'
   spec.add_dependency 'jwt', '~> 1.5'
 
