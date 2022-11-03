@@ -10,6 +10,10 @@ RSpec.describe ReportGenerator::DownloadsController do
     allow(controller).to receive(:_routes).and_return(routes)
   end
 
+  def use_keywords_for_request_methods?
+    method(:process).parameters.map(&:last).include?(:params)
+  end
+
   describe 'GET show' do
     include_context 'mock S3'
 
@@ -20,7 +24,13 @@ RSpec.describe ReportGenerator::DownloadsController do
       )
     end
 
-    subject { get :show, params: { token: jwt } }
+    subject do
+      if use_keywords_for_request_methods?
+        get :show, params: { token: jwt }
+      else
+        get :show, token: jwt
+      end
+    end
 
     before do
       with_config do |config|
@@ -104,7 +114,11 @@ RSpec.describe ReportGenerator::DownloadsController do
     end
 
     subject do
-      post :create, params: report_download_params
+      if use_keywords_for_request_methods?
+        post :create, params: report_download_params
+      else
+        post :create, report_download_params
+      end
     end
 
     it 'successfully starts the report worker' do
