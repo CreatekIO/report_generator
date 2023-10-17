@@ -7,7 +7,12 @@ module ReportGenerator
 
     self.table_name = 'report_downloads'
 
-    has_one :admin_report_download, class_name: 'ReportGenerator::AdminDownload', foreign_key: :report_download_id
+    has_one(
+      :admin_report_download,
+      class_name: 'ReportGenerator::AdminDownload',
+      foreign_key: :report_download_id,
+      dependent: :destroy
+    )
     has_one :admin, through: :admin_report_download
     accepts_nested_attributes_for :admin_report_download
 
