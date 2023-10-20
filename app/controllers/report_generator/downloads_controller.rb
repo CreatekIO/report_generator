@@ -49,9 +49,13 @@ module ReportGenerator
     end
 
     def redirect_with_message(message)
-      location = request.referrer.presence || '/'
+      redirect_to safe_referrer(fallback_location: '/'), alert: message
+    end
 
-      redirect_to location, alert: message
+    def safe_referrer(fallback_location:)
+      return fallback_location if URI(request.referrer.to_s).host != request.host
+    rescue ArgumentError, URI::Error
+      fallback_location
     end
   end
 end
