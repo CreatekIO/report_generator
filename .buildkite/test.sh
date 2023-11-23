@@ -2,9 +2,18 @@
 set -eu
 
 echo "~~~ Waiting for MySQL"
-until curl -s -o /dev/null "$DB_HOST:3306"; do
+retries=5
+
+until ruby -rsocket -e 'Socket.tcp(ENV["DB_HOST"], 3306).close' 2>/dev/null; do
+  retries="$(("$retries" - 1))"
+
+  if [ "$retries" -eq 0 ]; then
+    echo "Failed to reach MySQL" >&2
+    exit 1
+  fi
+
   sleep 5
-  echo "Waiting for MySQL"
+  echo "Waiting for MySQL ($retries retries left)"
 done
 
 echo "+++ :rspec: Running specs"
