@@ -1,20 +1,38 @@
 steps:
-  - label: ':rspec: Rails {{matrix}}'
+  - label: ':rspec: Rails {{matrix.rails}} (Ruby {{matrix.ruby}})'
     key: spec
     plugins:
       - docker-compose#v3.9.0:
           run: app
           env:
+            - 'RAILS_VERSION={{matrix.rails}}'
             # used for names of JUnit XML files
             - BUILDKITE_JOB_ID
     timeout_in_minutes: 5
-    command: 'RAILS_VERSION={{matrix}} .buildkite/test.sh'
+    command:
+      - './docker-entrypoint.sh'
+      - '.buildkite/test.sh'
     env:
       BYEBUG: '0'
       DEBUGGER: '0'
+      RUBY_VERSION: '{{matrix.ruby}}'
     matrix:
-      - '4.2'
-      - '5.2'
+      setup:
+        rails:
+          - '4.2'
+          - '5.2'
+        ruby:
+          - '2.5.8'
+          - '2.6.10'
+      adjustments:
+        - with:
+            rails: '5.2'
+            ruby: '2.5.8'
+          skip: true
+        - with:
+            rails: '4.2'
+            ruby: '2.6.10'
+          skip: true
     artifact_paths:
       - log/*.log
       - tmp/rspec-junit-*.xml
