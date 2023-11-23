@@ -4,8 +4,11 @@ services:
     image: ruby:2.5.8
     working_dir: /app
     command: >
-      bash -c '
-        bundle install &&
+      bash -ec '
+        gem install bundler -v 2.3.27
+        gem update --system 3.2.3
+
+        bundle install
         sleep infinity
       '
     environment:
