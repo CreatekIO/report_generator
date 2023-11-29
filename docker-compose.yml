@@ -1,11 +1,11 @@
 version: '3'
 services:
   app:
-    image: ruby:2.5.8
+    image: ruby:${RUBY_VERSION:-2.5.8}
     working_dir: /app
     command: >
-      bash -c '
-        bundle install &&
+      bash -eu -c '
+        ./docker-entrypoint.sh
         sleep infinity
       '
     environment:
@@ -24,4 +24,4 @@ services:
     expose:
       - 3306
     ports:
-      - '33306:3306'
+      - '${MYSQL_EXPOSED_PORT:-33306}:3306'

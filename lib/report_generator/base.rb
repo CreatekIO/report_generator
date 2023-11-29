@@ -1,4 +1,8 @@
-require 'csv'
+begin
+  require 'csv-safe'
+rescue LoadError
+  require_relative '../../vendor/lib/csv-safe'
+end
 
 module ReportGenerator
   class Base < Abstract
@@ -39,7 +43,7 @@ module ReportGenerator
     private_class_method :inherit_columns!
 
     def csv_string
-      CSV.generate(headers: true) do |csv|
+      CSVSafe.generate(headers: true) do |csv|
         csv << headers
 
         each_row do |record|
