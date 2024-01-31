@@ -35,20 +35,20 @@ Gem::Specification.new do |spec|
 
   current_ruby_version = Gem::Version.new(RUBY_VERSION)
 
-  spec.add_dependency 'activerecord', '>= 4.2', '< 6'
-  spec.add_dependency 'activesupport', '>= 4.2', '< 6'
-  spec.add_dependency 'dragonfly', '~> 1'
-  spec.add_dependency 'rails-html-sanitizer', '~> 1'
-  spec.add_dependency 'railties', '>= 4.2', '< 6'
-  spec.add_dependency 'sidekiq', '>= 3'
-  spec.add_dependency 'jwt', '~> 1.5'
+  spec.add_dependency 'activerecord', '>= 4.2', '< 6.1'
+  spec.add_dependency 'activesupport', '>= 4.2', '< 6.1'
   spec.add_dependency 'csv-safe', '>= 3.2.1' if Gem::Requirement.new('>= 2.6').satisfied_by?(current_ruby_version)
+  spec.add_dependency 'dragonfly', '~> 1'
+  spec.add_dependency 'jwt', '~> 1.5'
+  spec.add_dependency 'rails-html-sanitizer', '~> 1'
+  spec.add_dependency 'railties', '>= 4.2', '< 6.1'
+  spec.add_dependency 'sidekiq', '>= 3'
 
   spec.add_development_dependency 'bundler', '>= 2.2.18', '< 3'
   spec.add_development_dependency 'byebug'
   spec.add_development_dependency 'dragonfly-s3_data_store', '~> 1.3'
   spec.add_development_dependency 'mysql2', '~> 0.5.3'
   spec.add_development_dependency 'rake', '~> 12.3.3'
-  spec.add_development_dependency 'rspec-rails', '~> 3.0'
   spec.add_development_dependency 'rspec_junit_formatter', '~> 0.4'
+  spec.add_development_dependency 'rspec-rails', '~> 3.0'
 end
