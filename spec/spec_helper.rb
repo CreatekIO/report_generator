@@ -5,6 +5,7 @@ require 'rails/all'
 require 'rspec/rails'
 require 'active_support/testing/time_helpers'
 require 'report_generator'
+require_relative '../app/concerns/report_generator/dragonfly_download_adapter'
 require_relative '../app/models/report_generator/download'
 
 ENV['RAILS_ENV'] ||= 'test'
@@ -37,7 +38,7 @@ db_config = {
   password: ENV['DB_PASSWORD']
 }.freeze
 
-ActiveRecord::Base.logger = ActiveSupport::Logger.new(File.expand_path('../log/test.log', __dir__))
+# ActiveRecord::Base.logger = ActiveSupport::Logger.new(File.expand_path('../log/test.log', __dir__))
 ActiveRecord::Base.try(:use_yaml_unsafe_load=, true) # for compatibility with Ruby 2.5
 ActiveRecord::Base.establish_connection(db_config)
 
