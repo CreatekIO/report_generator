@@ -6,6 +6,7 @@ require 'rspec/rails'
 require 'active_support/testing/time_helpers'
 require 'report_generator'
 require_relative '../app/concerns/report_generator/dragonfly_download_adapter'
+require_relative '../app/concerns/report_generator/active_storage_download_adapter'
 require_relative '../app/models/report_generator/download'
 
 ENV['RAILS_ENV'] ||= 'test'
