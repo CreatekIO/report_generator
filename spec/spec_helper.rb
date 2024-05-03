@@ -39,7 +39,7 @@ db_config = {
   password: ENV['DB_PASSWORD']
 }.freeze
 
-# ActiveRecord::Base.logger = ActiveSupport::Logger.new(File.expand_path('../log/test.log', __dir__))
+ActiveRecord::Base.logger = ActiveSupport::Logger.new(File.expand_path('../log/test.log', __dir__))
 ActiveRecord::Base.try(:use_yaml_unsafe_load=, true) # for compatibility with Ruby 2.5
 ActiveRecord::Base.establish_connection(db_config)
 
