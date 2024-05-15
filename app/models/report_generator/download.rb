@@ -1,10 +1,8 @@
-require 'dragonfly'
 require 'jwt'
 
 module ReportGenerator
   class Download < ActiveRecord::Base
-    extend Dragonfly::Model
-
+    include Module.const_get("ReportGenerator::#{ReportGenerator.config.download_adapter}DownloadAdapter")
     self.table_name = 'report_downloads'
 
     has_one(
@@ -18,8 +16,6 @@ module ReportGenerator
 
     serialize :report_data, Hash
 
-    dragonfly_accessor :file
-
     validates :report_type, presence: true
 
     # Max value for `X-Amz-Expires` header
@@ -31,21 +27,6 @@ module ReportGenerator
 
       self.remote_file_url = expiring_link(expires_in: MAX_EXPIRY)
       save!
-    end
-
-    def expiring_link(expires_in: MAX_EXPIRY)
-      # This mirrors the logic used by Fog to calculate the `X-Amz-Expires`
-      # header, so that we always get a valid value.
-      # See: https://github.com/fog/fog-aws/blob/v2.0.0/lib/fog/aws/storage.rb#L178-L185
-      if expires_in == MAX_EXPIRY
-        now = defined?(Fog) ? Fog::Time.now : Time.now
-        expires_at = now + EXPIRY_OFFSET
-        expires_at -= 60.seconds while (expires_at.to_i - now.to_i) > MAX_EXPIRY
-      else
-        expires_at = expires_in.from_now
-      end
-
-      file.remote_url(expires: expires_at)
     end
 
     def to_jwt

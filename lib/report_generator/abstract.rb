@@ -13,8 +13,12 @@ module ReportGenerator
     end
 
     def generate
-      report_download.file = tempfile
-      report_download.file.name = file_name
+      if ReportGenerator.config.download_adapter == 'ActiveStorage'
+        report_download.report.attach(io: File.open(tempfile), filename: file_name, content_type: "text/csv")
+      else
+        report_download.file = tempfile
+        report_download.file.name = file_name
+      end
       report_download.generated_at = Time.now
       report_download.save!
       report_download.set_expiring_link!
