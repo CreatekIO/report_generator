@@ -8,7 +8,11 @@ module ReportGenerator
     attr_writer :download_class, :worker_class, :parent_controller, :html_sanitizer,
       :jwt_algorithm, :jwt_hmac_secret,
       :jwt_expired_message, :jwt_invalid_message, :download_not_found_message,
-      :download_adapter
+      :download_adapter, :local_storage_host
+
+    def local_storage_host
+      @local_storage_host ||= ''
+    end
 
     def download_adapter
       @download_adapter ||= 'Dragonfly'
