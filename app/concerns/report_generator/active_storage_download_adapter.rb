@@ -6,7 +6,7 @@ module ReportGenerator::ActiveStorageDownloadAdapter
   end
 
   def expiring_link(expires_in: ReportGenerator::Download::MAX_EXPIRY)
-    if Rails.application.config.active_storage.service == :local
+    if %i[local test].include?(Rails.application.config.active_storage.service)
       ActiveStorage::Current.host = ReportGenerator.config.local_storage_host
     end
 
