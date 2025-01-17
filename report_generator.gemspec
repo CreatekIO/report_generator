@@ -51,4 +51,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 12.3.3'
   spec.add_development_dependency 'rspec_junit_formatter', '~> 0.4'
   spec.add_development_dependency 'rspec-rails', '~> 3.0'
+  spec.add_development_dependency "appraisal"
 end
