@@ -1,6 +1,7 @@
 require 'bundler/setup'
 require 'byebug'
 require 'mysql2'
+require 'logger'
 require 'rails/all'
 require 'rspec/rails'
 require 'active_support/testing/time_helpers'
