@@ -31,7 +31,7 @@ end
 Rails.application = ReportGenerator::Engine
 
 db_config = {
-  database: "report_generator_test#{ENV['CIRCLE_NODE_INDEX']}",
+  database: 'report_generator_test',
   adapter: 'mysql2',
   encoding: 'utf8mb4',
   pool: 5,
