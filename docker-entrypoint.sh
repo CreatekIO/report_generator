@@ -12,13 +12,9 @@ endgroup() {
 
 group "update RubyGems and Bundler"
 
-if [ "${RUBY_VERSION:-}" = "2.6.10" ]; then
-  gem install bundler -v "~> 2.4.22"
-  gem update --system 3.4.22 >/dev/null
-else
-  gem install bundler -v 2.3.27
-  gem update --system 3.2.3 >/dev/null
-fi
+# latest supported versions for Ruby 2.x
+gem install bundler -v "~> 2.4.22"
+gem update --system 3.4.22 >/dev/null
 
 endgroup
 
