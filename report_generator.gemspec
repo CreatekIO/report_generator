@@ -49,6 +49,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'dragonfly-s3_data_store', '~> 1.3'
   spec.add_development_dependency 'mysql2', '~> 0.5.3'
   spec.add_development_dependency 'rake', '~> 12.3.3'
-  spec.add_development_dependency 'rspec_junit_formatter', '~> 0.4'
   spec.add_development_dependency 'rspec-rails', '~> 3.0'
 end
