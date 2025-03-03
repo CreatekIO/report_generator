@@ -1,6 +1,7 @@
 require 'bundler/setup'
 require 'byebug'
 require 'mysql2'
+require 'logger'
 require 'rails/all'
 require 'rspec/rails'
 require 'active_support/testing/time_helpers'
@@ -30,7 +31,7 @@ end
 Rails.application = ReportGenerator::Engine
 
 db_config = {
-  database: "report_generator_test#{ENV['CIRCLE_NODE_INDEX']}",
+  database: 'report_generator_test',
   adapter: 'mysql2',
   encoding: 'utf8mb4',
   pool: 5,

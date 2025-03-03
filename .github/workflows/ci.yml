@@ -1,0 +1,51 @@
+name: Test Suite
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  spec:
+    name: RSpec
+    runs-on: ubuntu-latest
+
+    container:
+      image: ruby:2.7.8
+      credentials:
+        username: ${{ secrets.ORG_DOCKERHUB_USERNAME }}
+        password: ${{ secrets.ORG_DOCKERHUB_TOKEN }}
+      env:
+        DB_HOST: db
+        DB_USERNAME: root
+
+    services: # versions here should match those used in docker-compose.yml
+      db:
+        image: mysql:8.0.34
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run RSpec
+        shell: script -q -e -c "bash {0}" # force colour output - see https://github.com/actions/runner/issues/241
+        run: |
+          set -euo pipefail
+
+          ./docker-entrypoint.sh
+
+          mkdir -p tmp
+          mkdir -p log
+
+          bin/rspec
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: "test.log"
+          path: log/test.log
