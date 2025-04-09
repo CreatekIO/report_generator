@@ -13,6 +13,8 @@ module ReportGenerator
 
     # Based on https://github.com/rails/webpacker/blob/v3.6.0/lib/webpacker/railtie.rb#L57-L65
     initializer 'report_generator.helper' do
+      require_relative '../../app/helpers/report_generator/helper'
+
       ActiveSupport.on_load :action_controller do
         ActionController::Base.helper ReportGenerator::Helper
       end
