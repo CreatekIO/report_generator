@@ -35,13 +35,13 @@ Gem::Specification.new do |spec|
 
   current_ruby_version = Gem::Version.new(RUBY_VERSION)
 
-  spec.add_dependency 'activerecord', '>= 4.2', '< 6.2'
-  spec.add_dependency 'activesupport', '>= 4.2', '< 6.2'
+  spec.add_dependency 'activerecord', '>= 4.2', '< 7.1'
+  spec.add_dependency 'activesupport', '>= 4.2', '< 7.1'
   spec.add_dependency 'csv-safe', '>= 3.2.1' if Gem::Requirement.new('>= 2.6').satisfied_by?(current_ruby_version)
   spec.add_dependency 'dragonfly', '~> 1'
   spec.add_dependency 'jwt', '~> 1.5'
   spec.add_dependency 'rails-html-sanitizer', '~> 1'
-  spec.add_dependency 'railties', '>= 4.2', '< 6.2'
+  spec.add_dependency 'railties', '>= 4.2', '< 7.1'
   spec.add_dependency 'sidekiq', '>= 3'
 
   spec.add_development_dependency 'bundler', '>= 2.2.18', '< 3'
