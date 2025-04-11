@@ -12,6 +12,6 @@ module ReportGenerator::ActiveStorageDownloadAdapter
       ActiveStorage::Current.host = ReportGenerator.config.local_storage_host
     end
 
-    self.report.service_url(expires_in: expires_in.to_i, disposition: "attachment")
+    self.report.url(expires_in: expires_in.to_i, disposition: "attachment")
   end
 end
