@@ -9,7 +9,7 @@ module ReportGenerator::ActiveStorageDownloadAdapter
     return self.remote_file_url if self.remote_file_url.present? && !self.report.attached?
 
     if %i[local test].include?(Rails.application.config.active_storage.service)
-      ActiveStorage::Current.host = ReportGenerator.config.local_storage_host
+      ActiveStorage::Current.url_options = { host: ReportGenerator.config.local_storage_host }
     end
 
     self.report.url(expires_in: expires_in.to_i, disposition: "attachment")
