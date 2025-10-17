@@ -20,7 +20,7 @@ endgroup
 
 group "bundle install"
 
-bundle install \
+bundle _2.4.22_ install \
   --jobs "$(getconf _NPROCESSORS_ONLN)" \
   --retry 2
 
