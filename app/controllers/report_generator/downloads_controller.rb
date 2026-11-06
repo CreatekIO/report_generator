@@ -10,7 +10,7 @@ module ReportGenerator
     def show
       download = ReportGenerator.download_class.from_jwt(params[:token])
 
-      redirect_to download.expiring_link(expires_in: 5.minutes)
+      redirect_to download.expiring_link(expires_in: expiry_time)
     end
 
     def create
@@ -34,6 +34,10 @@ module ReportGenerator
       return process_report_download_params(given_params) if respond_to?(:process_report_download_params)
 
       given_params
+    end
+
+    def expiry_time
+      ReportGenerator.config.report_expiry_time
     end
 
     def jwt_expired
