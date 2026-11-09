@@ -23,6 +23,9 @@ RSpec.describe ReportGenerator::DownloadsController do
         file_uid: '1234/file.csv'
       )
     end
+    let(:expiry_time) do
+      1.minute
+    end
 
     subject do
       if use_keywords_for_request_methods?
@@ -38,6 +41,8 @@ RSpec.describe ReportGenerator::DownloadsController do
         config.jwt_expired_message = 'jwt_expired_message'
         config.jwt_invalid_message = ' jwt_invalid_message'
         config.download_not_found_message = 'download_not_found_message'
+        # Non default expiry time
+        config.report_expiry_time = expiry_time
       end
     end
 
@@ -57,7 +62,7 @@ RSpec.describe ReportGenerator::DownloadsController do
           )
 
           expect(location_params['X-Amz-Signature']).to be_present
-          expect(Integer(location_params['X-Amz-Expires'])).to be_within(5.seconds).of(5.minutes.to_i)
+          expect(Integer(location_params['X-Amz-Expires'])).to be_within(5.seconds).of(expiry_time.to_i)
         end
       end
     end

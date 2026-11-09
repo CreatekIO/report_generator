@@ -8,7 +8,7 @@ module ReportGenerator
     attr_writer :download_class, :worker_class, :parent_controller, :html_sanitizer,
       :jwt_algorithm, :jwt_hmac_secret,
       :jwt_expired_message, :jwt_invalid_message, :download_not_found_message,
-      :download_adapter, :local_storage_host
+      :download_adapter, :local_storage_host, :report_expiry_time
 
     def local_storage_host
       @local_storage_host ||= ''
@@ -48,6 +48,10 @@ module ReportGenerator
 
     def download_not_found_message
       @download_not_found_message ||= 'We could not find the report you requested'
+    end
+
+    def report_expiry_time
+      @report_expiry_time ||= 5.minutes
     end
 
     def html_sanitizer
